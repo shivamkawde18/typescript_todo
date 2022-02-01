@@ -2,10 +2,15 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { KeyboardEvent } from "react";
 import { json } from "stream/consumers";
-import Alltask from "../component/Alltask";
-import Completetask from "../component/Completetask";
-import "../Style.css";
-import Uncomplete from "../component/Uncomplete";
+import Alltask from "../Alltask/Alltask";
+import Completetask from "../../component/CompleteTask/Completetask";
+import "/Users/shivamkawde/rectjs/todotype/src/Style.css";
+import Uncomplete from "../../component/CompleteTask/Uncomplete";
+//import Addbtn from "../../component/Addbtn";
+import Button from "../../component/Button/Button";
+import Checkbox from "../../component/task/Checkbox";
+import Name from "../../component/task/Name";
+import Content from "../../component/task/Content";
 export interface task {
   name: string;
   content: string;
@@ -23,32 +28,6 @@ function Form() {
   const [allTaskFlag, setAllTaskFlag] = useState(false);
   const [completeTask, setCompleteTask] = useState(false);
   const [uncompleteFlag, setUncompleteFlag] = useState(false);
-  useEffect(() => {
-    let temp: any[];
-    let allData = localStorage.getItem("tasks");
-    if (allData != null) {
-      let alldataParse = JSON.parse(allData);
-      temp = alldataParse;
-    } else temp = [];
-    localStorage.setItem("tasks", JSON.stringify(temp));
-    setAllTasks(temp);
-  }, []);
-  const checkFLag = () => {
-    if (userCheck) {
-      setCheck(false);
-    } else {
-      setCheck(true);
-    }
-  };
-  const taskInput = (e: any): void => {
-    console.log(e.target.value);
-    setContent(e.target.value);
-  };
-
-  const nameInput = (e: any): void => {
-    console.log(e.target.value);
-    setName(e.target.value);
-  };
   const createTodo = () => {
     console.log(allTask.length);
     let temp: any[];
@@ -70,6 +49,25 @@ function Form() {
     localStorage.setItem("tasks", JSON.stringify(temp));
     setAllTasks(temp);
   };
+  useEffect(() => {
+    let temp: any[];
+    let allData = localStorage.getItem("tasks");
+    if (allData != null) {
+      let alldataParse = JSON.parse(allData);
+      temp = alldataParse;
+    } else temp = [];
+    localStorage.setItem("tasks", JSON.stringify(temp));
+    setAllTasks(temp);
+  }, []);
+  const checkFLag = () => {
+    if (userCheck) {
+      setCheck(false);
+    } else {
+      setCheck(true);
+    }
+  };
+  
+
   console.log(allTask);
   return (
     <div>
@@ -127,26 +125,10 @@ function Form() {
       ) : (
         <>
           <div className="mainDiv">
-            <input
-              type="checkbox"
-              className="check"
-              onChange={() => {
-                checkFLag();
-              }}
-            />
-            <input
-              className="name"
-              placeholder="Enter your name"
-              onKeyUp={nameInput}
-            ></input>
-            <input
-              className="content"
-              placeholder="what is your task ? "
-              onKeyUp={taskInput}
-            />
-            <button className="addTask" onClick={createTodo}>
-              Add task
-            </button>
+            <Checkbox checkFlag={checkFLag} check={userCheck} flag="form" />
+            <Name setName={setName} flag="form"/>
+            <Content flag="from" setContent={setContent}/>
+            <Button createTodo={createTodo} flag={"Add"}/>
           </div>
         </>
       )}
